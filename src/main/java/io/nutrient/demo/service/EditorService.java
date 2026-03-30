@@ -2,7 +2,9 @@ package io.nutrient.demo.service;
 
 import io.nutrient.sdk.Document;
 import io.nutrient.sdk.editors.PdfEditor;
+import io.nutrient.sdk.editors.pdf.annotations.PdfAnnotationCollection;
 import io.nutrient.sdk.exceptions.NutrientException;
+import io.nutrient.sdk.types.Color;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,7 +21,23 @@ public class EditorService {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
-                // Add annotations on first page — exact annotation API to be verified
+
+                PdfAnnotationCollection annotations = editor.getPageCollection()
+                        .getPage(0).getAnnotationCollection();
+
+                // FreeText annotation near the top of the page
+                annotations.addFreeText(50, 750, 300, 30,
+                        "This is a freetext annotation", "SDK Demo",
+                        "Helvetica", 14f, Color.fromArgb(255, 0, 0, 0));
+
+                // Highlight annotation in the middle area
+                annotations.addHighlight(50, 700, 200, 20,
+                        "Highlighted region", "SDK Demo");
+
+                // Stamp annotation
+                annotations.addStamp(350, 700, 150, 50,
+                        "APPROVED", "SDK Demo");
+
                 editor.save();
                 editor.close();
             }
@@ -36,7 +54,18 @@ public class EditorService {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
-                // Add stamp annotation as watermark — exact API to be verified
+
+                int pageCount = editor.getPageCollection().getCount();
+                for (int i = 0; i < pageCount; i++) {
+                    PdfAnnotationCollection annotations = editor.getPageCollection()
+                            .getPage(i).getAnnotationCollection();
+
+                    var stamp = annotations.addStamp(100, 400, 400, 100,
+                            text, "Watermark");
+                    stamp.setOpacity(0.3f);
+                    stamp.setColor(Color.fromArgb(128, 200, 200, 200));
+                }
+
                 editor.save();
                 editor.close();
             }
