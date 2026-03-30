@@ -1,7 +1,10 @@
 package io.nutrient.demo.service;
 
 import io.nutrient.sdk.Document;
+import io.nutrient.sdk.Vision;
+import io.nutrient.sdk.enums.VisionEngine;
 import io.nutrient.sdk.exceptions.NutrientException;
+import io.nutrient.sdk.settings.SdkSettings;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,13 +20,16 @@ public class ExtractionService {
         Path inputFile = Files.createTempFile("input-", "-" + originalFilename);
         try {
             Files.write(inputFile, imageBytes);
+
+            // Configure OCR engine — fast extraction, skips AI augmentation
+            SdkSettings.getVisionSettings().setEngine(VisionEngine.Ocr);
+
             try (Document document = Document.open(inputFile.toString())) {
-                // Use VisionEngine.Ocr for fast OCR-only extraction
-                // The exact extraction API will be verified in Task 9
-                String extractedText = "";
+                Vision vision = Vision.set(document);
+                String extractedContent = vision.extractContent();
                 return Map.of(
                         "engine", "OCR",
-                        "text", extractedText,
+                        "content", extractedContent,
                         "filename", originalFilename
                 );
             }
@@ -37,13 +43,17 @@ public class ExtractionService {
         Path inputFile = Files.createTempFile("input-", "-" + originalFilename);
         try {
             Files.write(inputFile, imageBytes);
+
+            // Configure ICR engine — local ONNX models, full layout analysis
+            // Runs entirely offline, no external API calls required
+            SdkSettings.getVisionSettings().setEngine(VisionEngine.Icr);
+
             try (Document document = Document.open(inputFile.toString())) {
-                // Use VisionEngine.Icr for local ICR extraction (no VLM required)
-                // Runs entirely offline using ONNX models
-                String extractedText = "";
+                Vision vision = Vision.set(document);
+                String extractedContent = vision.extractContent();
                 return Map.of(
                         "engine", "ICR",
-                        "text", extractedText,
+                        "content", extractedContent,
                         "filename", originalFilename
                 );
             }

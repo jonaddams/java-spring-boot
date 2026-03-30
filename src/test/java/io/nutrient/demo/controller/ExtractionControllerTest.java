@@ -28,7 +28,7 @@ class ExtractionControllerTest {
     void ocrExtraction_returnsJson() throws Exception {
         Map<String, Object> fakeResult = Map.of(
                 "engine", "OCR",
-                "text", "Extracted text from document",
+                "content", "Extracted text from document",
                 "filename", "scan.pdf"
         );
         when(extractionService.extractTextOcr(any(byte[].class), anyString())).thenReturn(fakeResult);
@@ -39,14 +39,14 @@ class ExtractionControllerTest {
         mockMvc.perform(multipart("/api/extraction/ocr").file(file))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.engine").value("OCR"))
-                .andExpect(jsonPath("$.text").value("Extracted text from document"));
+                .andExpect(jsonPath("$.content").value("Extracted text from document"));
     }
 
     @Test
     void icrExtraction_returnsJson() throws Exception {
         Map<String, Object> fakeResult = Map.of(
                 "engine", "ICR",
-                "text", "Handwritten text extracted",
+                "content", "Handwritten text extracted",
                 "filename", "form.png"
         );
         when(extractionService.extractTextIcr(any(byte[].class), anyString())).thenReturn(fakeResult);
@@ -57,6 +57,6 @@ class ExtractionControllerTest {
         mockMvc.perform(multipart("/api/extraction/icr").file(file))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.engine").value("ICR"))
-                .andExpect(jsonPath("$.text").value("Handwritten text extracted"));
+                .andExpect(jsonPath("$.content").value("Handwritten text extracted"));
     }
 }
