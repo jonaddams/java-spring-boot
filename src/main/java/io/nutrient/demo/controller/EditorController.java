@@ -2,6 +2,8 @@ package io.nutrient.demo.controller;
 
 import io.nutrient.demo.service.EditorService;
 import io.nutrient.sdk.exceptions.NutrientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/editor")
 public class EditorController {
 
+    private static final Logger log = LoggerFactory.getLogger(EditorController.class);
     private final EditorService editorService;
 
     public EditorController(EditorService editorService) {
@@ -31,6 +34,7 @@ public class EditorController {
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(result);
         } catch (NutrientException | IOException e) {
+            log.error("add-annotations failed", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -67,6 +71,7 @@ public class EditorController {
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(result);
         } catch (NutrientException | IOException e) {
+            log.error("merge failed", e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -84,6 +89,7 @@ public class EditorController {
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(result);
         } catch (NutrientException | IOException e) {
+            log.error("add-page failed", e);
             return ResponseEntity.internalServerError().build();
         }
     }

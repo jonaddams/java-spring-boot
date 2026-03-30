@@ -3,7 +3,6 @@ package io.nutrient.demo.service;
 import io.nutrient.sdk.Document;
 import io.nutrient.sdk.editors.PdfEditor;
 import io.nutrient.sdk.exceptions.NutrientException;
-import io.nutrient.sdk.exporters.PdfExporter;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,40 +15,34 @@ public class EditorService {
 
     public byte[] addAnnotations(byte[] pdfBytes) throws NutrientException, IOException {
         Path inputFile = Files.createTempFile("input-", ".pdf");
-        Path outputFile = Files.createTempFile("output-", ".pdf");
         try {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
-                // Add annotations on first page — exact annotation API to be verified in Task 9
+                // Add annotations on first page — exact annotation API to be verified
                 editor.save();
                 editor.close();
-                document.exportAsPdf(outputFile.toString());
             }
-            return Files.readAllBytes(outputFile);
+            return Files.readAllBytes(inputFile);
         } finally {
             Files.deleteIfExists(inputFile);
-            Files.deleteIfExists(outputFile);
         }
     }
 
     public byte[] addWatermark(byte[] pdfBytes, String text, int fontSize, double rotation)
             throws NutrientException, IOException {
         Path inputFile = Files.createTempFile("input-", ".pdf");
-        Path outputFile = Files.createTempFile("output-", ".pdf");
         try {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
-                // Add stamp annotation as watermark — exact API to be verified in Task 9
+                // Add stamp annotation as watermark — exact API to be verified
                 editor.save();
                 editor.close();
-                document.exportAsPdf(outputFile.toString());
             }
-            return Files.readAllBytes(outputFile);
+            return Files.readAllBytes(inputFile);
         } finally {
             Files.deleteIfExists(inputFile);
-            Files.deleteIfExists(outputFile);
         }
     }
 
@@ -60,10 +53,8 @@ public class EditorService {
         }
 
         Path baseFile = Files.createTempFile("base-", "-" + filenames.get(0));
-        Path outputFile = Files.createTempFile("output-", ".pdf");
         List<Path> tempFiles = new java.util.ArrayList<>();
         tempFiles.add(baseFile);
-        tempFiles.add(outputFile);
 
         try {
             Files.write(baseFile, documents.get(0));
@@ -81,9 +72,8 @@ public class EditorService {
 
                 editor.save();
                 editor.close();
-                baseDocument.export(outputFile.toString(), new PdfExporter());
             }
-            return Files.readAllBytes(outputFile);
+            return Files.readAllBytes(baseFile);
         } finally {
             for (Path tempFile : tempFiles) {
                 Files.deleteIfExists(tempFile);
@@ -94,7 +84,6 @@ public class EditorService {
     public byte[] addPage(byte[] pdfBytes, double width, double height, int insertAtIndex)
             throws NutrientException, IOException {
         Path inputFile = Files.createTempFile("input-", ".pdf");
-        Path outputFile = Files.createTempFile("output-", ".pdf");
         try {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
@@ -102,12 +91,10 @@ public class EditorService {
                 editor.addPage((float) width, (float) height, insertAtIndex);
                 editor.save();
                 editor.close();
-                document.exportAsPdf(outputFile.toString());
             }
-            return Files.readAllBytes(outputFile);
+            return Files.readAllBytes(inputFile);
         } finally {
             Files.deleteIfExists(inputFile);
-            Files.deleteIfExists(outputFile);
         }
     }
 
