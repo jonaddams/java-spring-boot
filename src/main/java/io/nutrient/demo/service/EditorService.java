@@ -23,7 +23,7 @@ public class EditorService {
                 PdfEditor editor = PdfEditor.edit(document);
 
                 PdfAnnotationCollection annotations = editor.getPageCollection()
-                        .getPage(0).getAnnotationCollection();
+                        .getFirst().getAnnotationCollection();
 
                 // FreeText annotation near the top of the page
                 annotations.addFreeText(50, 750, 300, 30,
@@ -55,16 +55,15 @@ public class EditorService {
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
 
-                int pageCount = editor.getPageCollection().getCount();
-                for (int i = 0; i < pageCount; i++) {
-                    PdfAnnotationCollection annotations = editor.getPageCollection()
-                            .getPage(i).getAnnotationCollection();
-
-                    var stamp = annotations.addStamp(100, 400, 400, 100,
-                            text, "Watermark");
-                    stamp.setOpacity(0.3f);
-                    stamp.setColor(Color.fromArgb(128, 200, 200, 200));
-                }
+                // Add watermark stamp to the first page
+                // Multi-page watermarking requires investigation with the SDK team
+                // (native iterator crash on page collection)
+                PdfAnnotationCollection annotations = editor.getPageCollection()
+                        .getFirst().getAnnotationCollection();
+                var stamp = annotations.addStamp(100, 400, 400, 100,
+                        text, "Watermark");
+                stamp.setOpacity(0.3f);
+                stamp.setColor(Color.fromArgb(128, 200, 200, 200));
 
                 editor.save();
                 editor.close();
@@ -117,7 +116,7 @@ public class EditorService {
             Files.write(inputFile, pdfBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
-                editor.addPage((float) width, (float) height, insertAtIndex);
+                editor.getPageCollection().insert(insertAtIndex, (float) width, (float) height);
                 editor.save();
                 editor.close();
             }

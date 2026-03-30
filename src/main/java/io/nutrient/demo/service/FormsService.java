@@ -58,7 +58,7 @@ public class FormsService {
             try (Document document = Document.open(inputFile.toString())) {
                 PdfEditor editor = PdfEditor.edit(document);
                 PdfFormFieldCollection formFields = editor.getFormFieldCollection();
-                PdfPage firstPage = editor.getPageCollection().getPage(0);
+                PdfPage firstPage = editor.getPageCollection().getFirst();
 
                 List<Map<String, Object>> definitions = objectMapper.readValue(
                         fieldDefinitionsJson, new TypeReference<>() {});
