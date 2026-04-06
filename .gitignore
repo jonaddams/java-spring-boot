@@ -15,3 +15,10 @@ target/
 
 # Env
 .env
+run.sh
+
+# JVM crash logs
+hs_err_pid*.log
+
+extract-data-from-image-icr
+docs

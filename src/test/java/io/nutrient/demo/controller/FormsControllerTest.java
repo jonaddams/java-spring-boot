@@ -23,17 +23,16 @@ class FormsControllerTest {
     private FormsService formsService;
 
     @Test
-    void fillForm_returnsPdf() throws Exception {
-        byte[] fakePdf = "filled-pdf".getBytes();
-        when(formsService.fillFormFields(any(byte[].class), anyMap())).thenReturn(fakePdf);
+    void listFields_returnsJson() throws Exception {
+        when(formsService.listFormFields(any(byte[].class)))
+                .thenReturn(java.util.List.of(
+                        java.util.Map.of("name", "firstName", "type", "PdfTextFormField")));
 
         MockMultipartFile file = new MockMultipartFile("file", "form.pdf",
                 "application/pdf", "pdf-content".getBytes());
 
-        mockMvc.perform(multipart("/api/forms/fill")
-                        .file(file)
-                        .param("fieldValues", "{\"name\":\"John\"}"))
+        mockMvc.perform(multipart("/api/forms/list-fields").file(file))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/pdf"));
+                .andExpect(content().contentType("application/json"));
     }
 }
