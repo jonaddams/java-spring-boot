@@ -1,0 +1,10 @@
+target/
+.idea/
+.vscode/
+.env
+run.sh
+hs_err_pid*.log
+extract-data-from-image-icr/
+docs/
+*.iml
+.DS_Store
