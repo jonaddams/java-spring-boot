@@ -5,9 +5,12 @@ COPY mvnw pom.xml ./
 RUN ./mvnw dependency:go-offline -q
 COPY src/ src/
 RUN ./mvnw package -DskipTests -q
+# Extract the fat JAR so native SDK JARs are regular files on disk
+# (the Nutrient SDK resolves its JAR path via URI — nested JARs break this)
+RUN java -Djarmode=tools -jar target/*.jar extract --destination extracted
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/extracted/ ./
 EXPOSE 8080
 ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "app.jar"]
