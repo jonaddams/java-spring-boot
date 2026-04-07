@@ -13,4 +13,4 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/extracted/ ./
 EXPOSE 8080
-ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "app.jar"]
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "demo-0.0.1-SNAPSHOT.jar"]
