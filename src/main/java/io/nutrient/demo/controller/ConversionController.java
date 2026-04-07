@@ -43,6 +43,11 @@ public class ConversionController {
         return convertToPdf(file);
     }
 
+    @PostMapping("/md-to-pdf")
+    public ResponseEntity<byte[]> mdToPdf(@RequestParam("file") MultipartFile file) {
+        return convertToPdf(file);
+    }
+
     @PostMapping("/pdf-to-html")
     public ResponseEntity<byte[]> pdfToHtml(@RequestParam("file") MultipartFile file) {
         try {
