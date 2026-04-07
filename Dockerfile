@@ -11,7 +11,7 @@ RUN java -Djarmode=tools -jar target/*.jar extract --destination extracted
 
 FROM eclipse-temurin:21-jre
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libxext6 libxrender1 libxtst6 libxi6 libfreetype6 fontconfig \
+    libxext6 libxrender1 libxtst6 libxi6 libfreetype6 fontconfig libicu72 \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=build /app/extracted/ ./
