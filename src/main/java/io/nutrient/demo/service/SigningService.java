@@ -1,8 +1,9 @@
 package io.nutrient.demo.service;
 
+import io.nutrient.sdk.Document;
 import io.nutrient.sdk.exceptions.NutrientException;
 import io.nutrient.sdk.signing.DigitalSignatureOptions;
-import io.nutrient.sdk.signing.PdfSigner;
+import io.nutrient.sdk.signing.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -52,8 +53,9 @@ public class SigningService {
             options.setReason("Document signing demo");
             options.setLocation("Nutrient Java SDK");
 
-            try (PdfSigner signer = new PdfSigner()) {
-                signer.sign(inputFile.toString(), outputFile.toString(), options);
+            try (Document document = Document.open(inputFile.toString());
+                 Signature signer = new Signature()) {
+                signer.sign(document, outputFile.toString(), options);
             }
 
             return Files.readAllBytes(outputFile);
