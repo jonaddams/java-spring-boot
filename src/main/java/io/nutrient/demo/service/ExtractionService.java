@@ -42,9 +42,9 @@ public class ExtractionService {
             Files.write(inputFile, imageBytes);
             try (Document document = Document.open(inputFile.toString())) {
                 VisionSettings vs = document.getSettings().getVisionSettings();
-                vs.setFeatures(VisionFeatures.Handwritting);
+                vs.setFeatures(VisionFeatures.Handwriting);
 
-                VisionEngine visionEngine = "OCR".equals(engine) ? VisionEngine.Ocr : VisionEngine.Icr;
+                VisionEngine visionEngine = "OCR".equals(engine) ? VisionEngine.AdaptiveOcr : VisionEngine.Icr;
                 vs.setEngine(visionEngine);
 
                 Vision vision = Vision.set(document);
