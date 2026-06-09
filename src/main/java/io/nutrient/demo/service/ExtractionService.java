@@ -21,10 +21,6 @@ public class ExtractionService {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    // SDK bug: native Close() on Vision objects SIGSEGV's on the GC Cleaner thread.
-    // Retain references to prevent cleanup.
-    private static final List<Vision> visionKeepAlive = new ArrayList<>();
-
     public Map<String, Object> extractTextOcr(byte[] imageBytes, String originalFilename)
             throws NutrientException, IOException {
         return extractWithEngine(imageBytes, originalFilename, "OCR");
@@ -48,7 +44,6 @@ public class ExtractionService {
                 vs.setEngine(visionEngine);
 
                 Vision vision = Vision.set(document);
-                visionKeepAlive.add(vision);
                 String rawJson = vision.extractContent();
                 return formatExtractionResult(rawJson, originalFilename, engine);
             }
