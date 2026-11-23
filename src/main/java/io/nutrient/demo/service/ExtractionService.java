@@ -36,7 +36,7 @@ public class ExtractionService {
         Path inputFile = Files.createTempFile("input-", "-" + originalFilename);
         try {
             Files.write(inputFile, imageBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 VisionSettings vs = document.getSettings().getVisionSettings();
                 vs.setFeatures(VisionFeatures.Handwriting);
 

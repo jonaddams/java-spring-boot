@@ -53,7 +53,7 @@ public class SigningService {
             options.setReason("Document signing demo");
             options.setLocation("Nutrient Java SDK");
 
-            try (Document document = Document.open(inputFile.toString());
+            try (Document document = UntrustedInput.open(inputFile);
                  Signature signer = new Signature()) {
                 signer.sign(document, outputFile.toString(), options);
             }

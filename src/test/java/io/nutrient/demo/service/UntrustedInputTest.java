@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ConversionServiceTest {
+class UntrustedInputTest {
 
     // Uploaded HTML is untrusted. Each flag below closes a hole the SDK leaves
     // open by default (network, files, scripts); dropping one must fail here.
     @Test
-    void untrustedInputSettings_lockDownHtmlRendering() {
-        ConversionSettings c = ConversionService.untrustedInputSettings().getConversionSettings();
+    void settings_lockDownHtmlRendering() {
+        ConversionSettings c = UntrustedInput.settings().getConversionSettings();
         assertTrue(c.getHtmlBlockNetworkAccess(), "network");
         assertTrue(c.getHtmlBlockPrivateNetworkAccess(), "private network");
         assertTrue(c.getHtmlBlockFileAccess(), "file access");
