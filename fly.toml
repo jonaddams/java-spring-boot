@@ -1,0 +1,32 @@
+# Fly.io config. App names are global on Fly: if this one is taken, change it
+# here or pass --app.
+#   fly launch --no-deploy --copy-config      # first time only
+#   fly secrets set NUTRIENT_LICENSE_KEY=... CORS_ALLOWED_ORIGINS=https://your-frontend
+#   fly deploy                                # remote builder builds the Dockerfile (amd64)
+#   curl https://<app>.fly.dev/api/health     # warm it: a deploy discards the suspend snapshot
+app = "nutrient-java-sdk-api"
+primary_region = "iad"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Scale to zero with suspend: storage-only cost while idle, and a resume in
+  # a few hundred ms instead of a JVM + Spring cold start.
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    grace_period = "30s"
+    interval = "30s"
+    timeout = "5s"
+    method = "GET"
+    path = "/api/health"
+
+# Measured under a cgroup cap (linux/amd64): three rounds of ICR, OCR, HTML and
+# DOCX at 2 GB held ~1.3-1.4 GB resident with no OOM. 2 GB is also the ceiling
+# Fly recommends for suspend.
+[[vm]]
+  memory = "2gb"
+  cpu_kind = "shared"
+  cpus = 1

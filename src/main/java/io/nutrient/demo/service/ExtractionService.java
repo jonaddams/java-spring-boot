@@ -8,8 +8,8 @@ import io.nutrient.sdk.settings.VisionSettings;
 import io.nutrient.sdk.exceptions.NutrientException;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;

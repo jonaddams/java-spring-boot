@@ -8,3 +8,7 @@ extract-data-from-image-icr/
 docs/
 *.iml
 .DS_Store
+.claude/
+.remember/
+.gitattributes
+HELP.md
