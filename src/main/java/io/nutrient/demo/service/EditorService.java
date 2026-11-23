@@ -16,7 +16,7 @@ public class EditorService {
         Path inputFile = Files.createTempFile("input-", ".pdf");
         try {
             Files.write(inputFile, pdfBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 PdfEditor editor = PdfEditor.edit(document);
                 String xmp = editor.getMetadata().getXMP();
                 editor.close();

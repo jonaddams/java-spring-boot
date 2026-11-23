@@ -16,7 +16,7 @@ public class ConversionService {
         Path outputFile = Files.createTempFile("output-", ".pdf");
         try {
             Files.write(inputFile, inputBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 document.exportAsPdf(outputFile.toString());
             }
             return Files.readAllBytes(outputFile);
@@ -31,7 +31,7 @@ public class ConversionService {
         Path outputFile = Files.createTempFile("output-", ".html");
         try {
             Files.write(inputFile, pdfBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 document.exportAsHtml(outputFile.toString());
             }
             return Files.readAllBytes(outputFile);
@@ -46,7 +46,7 @@ public class ConversionService {
         Path outputFile = Files.createTempFile("output-", ".docx");
         try {
             Files.write(inputFile, pdfBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 document.exportAsWord(outputFile.toString());
             }
             return Files.readAllBytes(outputFile);
@@ -61,7 +61,7 @@ public class ConversionService {
         Path outputFile = Files.createTempFile("output-", ".xlsx");
         try {
             Files.write(inputFile, pdfBytes);
-            try (Document document = Document.open(inputFile.toString())) {
+            try (Document document = UntrustedInput.open(inputFile)) {
                 document.exportAsSpreadsheet(outputFile.toString());
             }
             return Files.readAllBytes(outputFile);
