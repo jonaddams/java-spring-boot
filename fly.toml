@@ -26,9 +26,10 @@ primary_region = "iad"
 # A dedicated core, not shared: on Fly, shared-cpu-1x ran out of burst credit
 # and throttled document processing from seconds to minutes (measured on the
 # .NET backend). With scale to zero it is billed per second only while running.
-# Memory, measured under a cgroup cap (linux/amd64): three rounds of ICR, OCR,
-# HTML and DOCX at 2 GB held ~1.3-1.4 GB resident with no OOM. 2 GB is also the
-# ceiling Fly recommends for suspend.
+# 4 GB, measured on Fly: at 2 GB the kernel OOM-killed Java (anon-rss 1.9 GB)
+# during OCR after HTML, because the VM's 2 GB also holds the kernel and Chrome.
+# 4 GB ran HTML, OCR, ICR and the rest twice with no OOM. Suspend still works
+# above Fly's 2 GB guideline here: resume took 0.7 s, then HTML->PDF 2.4 s.
 [[vm]]
   size = "performance-1x"
-  memory = "2gb"
+  memory = "4gb"
